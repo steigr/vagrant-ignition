@@ -23,7 +23,7 @@ module VagrantPlugins
 
           hostname = env[:machine].config.ignition.hostname
           ip = env[:machine].config.ignition.ip
-          provider = env[:machine].config.ignition.provider
+          provider = env[:machine].provider_name.to_s
 
           merge_ignition(ignition_path, hostname, ip, env, provider)
           if provider == "virtualbox"
@@ -31,7 +31,7 @@ module VagrantPlugins
 
             env[:machine].ui.info "Configuring Ignition Config Drive"
             env[:machine].provider.driver.execute("storageattach", "#{env[:machine].id}", "--storagectl", "IDE Controller", "--device", "0", "--port", "1", "--type", "hdd", "--medium", "#{File.join(drive_root, (drive_name + ".vmdk"))}")
-          elsif provider == "vmware"
+          elsif provider =~ /^vmware/
             data = ""
             if !ignition_path.nil?
               data = File.read(ignition_path + ".merged")

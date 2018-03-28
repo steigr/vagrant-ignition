@@ -52,7 +52,7 @@ def merge_ignition(ignition_path, hostname, ip, env, provider)
     config[:networkd][:units] ||= []
     if provider == "virtualbox"
       config[:networkd][:units] += [virtualbox_ip_entry(ip)]
-    elsif provider == "vmware"
+    elsif provider =~ /^vmware/
       config[:networkd][:units] += [vmware_ip_entry(ip)]
     else
       env[:machine].ui.info "WARNING: Invalid config.ignition.provider; failed to configure networking"
